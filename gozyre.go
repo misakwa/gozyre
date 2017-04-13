@@ -1,4 +1,6 @@
-// Package gozyre provides ...
+// Package gozyre provides a wrapping around the zyre c-library. It provides
+// clustering for peer-to-peer applications.
+// See: https://github.com/zeromq/zyre.
 package gozyre
 
 /*
@@ -45,10 +47,13 @@ var (
 var (
 	// ErrStartFailed is to used to represent startup failures
 	ErrStartFailed = errors.New("error starting zyre node")
+
 	// ErrNodeInterrupted is used to indicate an interruped node when receiving messages
 	ErrNodeInterrupted = errors.New("error receiving message from node")
+
 	// ErrInvalidEndpoint returned when setting an invalid endpoint
 	ErrInvalidEndpoint = errors.New("error setting endpoint")
+
 	// ErrAddingFrame is returned when constructing message frames for sending
 	ErrAddingFrame = errors.New("error adding message frame")
 )

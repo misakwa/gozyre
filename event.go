@@ -1,4 +1,3 @@
-// Package gozyre provides ...
 package gozyre
 
 /*
@@ -16,25 +15,33 @@ type EventType string
 const (
 	// JoinEvent indicates a node has joined a specific group
 	JoinEvent EventType = "JOIN"
+
 	// ExitEvent indicates a node has left the network
 	ExitEvent = "EXIT"
+
 	// EnterEvent indicates a node hash entered the network
 	EnterEvent = "ENTER"
+
 	// LeaveEvent indicates a peer has left a specific group
 	LeaveEvent = "LEAVE"
+
 	// StopEvent indicates that a node will go away
 	StopEvent = "STOP"
+
 	// EvasiveEvent indicates a node is being quiet for too long
 	EvasiveEvent = "EVASIVE"
+
 	// WhisperEvent indicates a peer has sent a message to this node
 	WhisperEvent = "WHISPER"
+
 	// ShoutEvent indicates a peer has sent a message to a group
 	ShoutEvent = "SHOUT"
+
 	// UnknownEvent indicates a message that is unsupported or unknown
 	UnknownEvent = "UNKNOWN"
 )
 
-// Event struct wraps the C zyre_event_t struct
+// Event describes a network event
 type Event struct {
 	czyreEvent *C.struct__zyre_event_t
 }
@@ -85,7 +92,8 @@ func (ev *Event) Group() string { return C.GoString(C.zyre_event_group(ev.czyreE
 // Address returns the address of the sending peer ip address
 func (ev *Event) Address() string { return C.GoString(C.zyre_event_peer_addr(ev.czyreEvent)) }
 
-// Headers returns the event headers
+// Headers returns the event headers. These are the headers from the node that
+// initiated this event.
 // XXX: Do we need to lock the headers? The underlying implementation uses a
 // cursor to iterate through the items and may introduce race conditions.
 func (ev *Event) Headers() map[string]string {

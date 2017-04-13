@@ -1,4 +1,3 @@
-// Package gozyre provides ...
 package gozyre
 
 /*
@@ -34,14 +33,11 @@ type Zyre struct {
 
 // New constructs a new node for peer-to-peer discovery
 // Constructor, creates a new Zyre node. Note that until you start the
-// node it is silent and invisible to other nodes on the network.
+// node, it is silent and invisible to other nodes on the network.
 // The node name is provided to other nodes during discovery. If you
 // specify an empty string, Zyre generates a randomized node name from the UUID.
-// If you also specify 0 for the port, it uses the default value from the
-// c-lib, which was 5670 in version 2 of zyre.
-// It is highly recommended that you specify an interface to be used by the
-// node for UDP beacons or a default one is chosen which may lead to strange
-// behavious on multi interface boxes.
+// Specify an empty string for the interface to have the system choose the default.
+// Specify 0 for the port to use the default port specification from the c library
 func New(name, iface string, port uint16, headers map[string]string, verbose bool) *Zyre {
 	znode := &Zyre{}
 	if name == "" {
@@ -81,9 +77,8 @@ func (n *Zyre) Start() error {
 	return nil
 }
 
-// Destroy shuts down the node
-// Destructor, destroys a Zyre node. When you destroy a node, any
-// messages it is sending or receiving will be discarded.
+// Destroy shuts down the node. Any messages that are being sent or received
+// will be discarded.
 func (n *Zyre) Destroy() {
 	C.zyre_destroy(&n.czyre)
 	n.czyre = nil
@@ -115,8 +110,8 @@ func (n *Zyre) SetInterval(interval time.Duration) {
 	C.zyre_set_interval(n.czyre, cinterval)
 }
 
-// Join joins the named group; after joining a group you can send messages to
-// the group and all Zyre nodes in that group will receive them.
+// Join joins the named group. After joining a group you can send messages to
+// the group and all nodes in that group will receive them.
 func (n *Zyre) Join(group string) {
 	cgroup := C.CString(group)
 	defer C.free(unsafe.Pointer(cgroup))
