@@ -15,10 +15,8 @@ func zListToSlice(zlist *C.struct__zlist_t, free bool) []string {
 		defer C.zlist_destroy(&zlist)
 	}
 	members := make([]string, 0)
-	for C.zlist_size(zlist) > 0 {
-		item := (*C.char)(C.zlist_pop(zlist))
-		members = append(members, C.GoString(item))
-		C.free(unsafe.Pointer(item))
+	for item := C.zlist_first(zlist); item != nil; item = C.zlist_next(zlist) {
+		members = append(members, C.GoString((*C.char)(item)))
 	}
 	return members
 }
