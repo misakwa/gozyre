@@ -58,7 +58,7 @@ func bytesToZmsg(ch <-chan []byte) (*C.struct__zmsg_t, error) {
 		// gc collects it too early
 		ret := C.zmsg_addmem(zmsg, unsafe.Pointer(&frame[0]), C.size_t(len(frame)))
 		if ret != 0 {
-			C.zmsg_destroy(unsafe.Pointer(zmsg))
+			C.zmsg_destroy(&zmsg)
 			err = ErrAddingFrame
 			break
 		}
