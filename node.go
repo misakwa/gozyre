@@ -4,19 +4,19 @@ package gozyre
 #include "zyre.h"
 
 int wrap_set_endpoint(zyre_t *self, const char *ep) {
-	return zyre_set_endpoint(self, ep);
+	return zyre_set_endpoint(self, "%s", ep);
 }
 
 void wrap_gossip_bind(zyre_t *self, const char *bind) {
-	zyre_gossip_bind(self, bind);
+	zyre_gossip_bind(self, "%s", bind);
 }
 
 void wrap_gossip_connect(zyre_t *self, const char *conn) {
-	zyre_gossip_connect(self, conn);
+	zyre_gossip_connect(self, "%s", conn);
 }
 
 void wrap_set_header(zyre_t *self, const char *name, const char *val) {
-	zyre_set_header(self, name, val);
+	zyre_set_header(self, name, "%s", val);
 }
 */
 import "C"
