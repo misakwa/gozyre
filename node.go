@@ -31,6 +31,16 @@ type Zyre struct {
 	czyre *C.struct__zyre_t
 }
 
+// Force ZMQ init 
+// Ensure ZMQ won't interact with GO signal handling mechanism.
+func init() {
+	C.zsys_init()
+	C.zsys_handler_set(nil)
+}
+
+// Instruct ZMQ to exit and free all its resources.
+func Exit() { C.zsys_shutdown() }
+
 // New constructs a new node for peer-to-peer discovery
 // Constructor, creates a new Zyre node. Note that until you start the
 // node, it is silent and invisible to other nodes on the network.
