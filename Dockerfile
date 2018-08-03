@@ -16,9 +16,13 @@ RUN apt-get -q update \
         libpcre3-dev \
         valgrind
 
+# Zyre 2.0.1 is not yet available.
+# But consider at least 2.0.0, containing hash # 2788f3a.
+# And then ... How to setup this in the Dockerfile ???
+
 ENV LIBSODIUM_VERSION=1.0.12 \
-    LIBZMQ_VERSION=v4.2.2 \
-    CZMQ_VERSION=v4.0.2 \
+    LIBZMQ_VERSION=v4.2.5 \
+    CZMQ_VERSION=v4.1.1 \
     ZYRE_VERSION=v2.0.0
 
 RUN declare -A _deps=( \
