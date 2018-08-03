@@ -2,6 +2,7 @@ package gozyre
 
 /*
 #include "zyre.h"
+#include "czmq.h"
 
 int wrap_set_endpoint(zyre_t *self, const char *ep) {
 	return zyre_set_endpoint(self, "%s", ep);
@@ -100,6 +101,11 @@ func (n *Zyre) Name() string { return C.GoString(C.zyre_name(n.czyre)) }
 
 // UUID returns our node UUID string, after successful initialization
 func (n *Zyre) UUID() string { return C.GoString(C.zyre_uuid(n.czyre)) }
+
+// Set beacon TCP ephemeral port to a well known value.
+func (n *Zyre) SetEphemeralPort(port uint16) {
+	C.zyre_set_ephemeral_port(n.czyre, C.int(port))
+}
 
 // SetEvasive sets the node evasiveness timeout. Default is 5 * time.Millisecond.
 func (n *Zyre) SetEvasive(timeout time.Duration) {
@@ -221,3 +227,7 @@ func (n *Zyre) Gossip(endpoint, hub string) error {
 
 // Stop signals to other nodes that this node will go away
 func (n *Zyre) Stop() { C.zyre_stop(n.czyre) }
+
+// Socket returns the socket, used by ZYRE.
+func (n *Zyre) Socket() *C.struct__zsock_t { return C.zyre_socket(n.czyre) }
+
