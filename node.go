@@ -103,8 +103,13 @@ func (n *Zyre) Name() string { return C.GoString(C.zyre_name(n.czyre)) }
 func (n *Zyre) UUID() string { return C.GoString(C.zyre_uuid(n.czyre)) }
 
 // Set beacon TCP ephemeral port to a well known value.
+func (n *Zyre) SetBeaconPeerPort(port uint16) {
+	C.zyre_set_beacon_peer_port(n.czyre, C.int(port))
+}
+
+// Old name of the above, deprecated.
 func (n *Zyre) SetEphemeralPort(port uint16) {
-	C.zyre_set_ephemeral_port(n.czyre, C.int(port))
+	C.zyre_set_beacon_peer_port(n.czyre, C.int(port))
 }
 
 // SetEvasive sets the node evasiveness timeout. Default is 5 * time.Millisecond.
