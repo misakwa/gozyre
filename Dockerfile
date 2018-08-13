@@ -17,7 +17,7 @@ RUN apt-get -q update \
         valgrind
 
 # Zyre 2.0.1 is not yet available.
-# But consider at least 2.0.0, containing hash # 2788f3a.
+# But consider at least 2.0.0, containing hash # ee1452a.
 # And then ... How to setup this in the Dockerfile ???
 
 ENV LIBSODIUM_VERSION=1.0.12 \
