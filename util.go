@@ -29,8 +29,12 @@ func zHashToMap(zhash *C.struct__zhash_t, free bool) map[string]string {
 	keyVal := make(map[string]string)
 	for item := C.zhash_first(zhash); item != nil; item = C.zhash_next(zhash) {
 		ckey := C.zhash_cursor(zhash)
-		cval := C.GoString((*C.char)(C.zhash_lookup(zhash, ckey)))
-		keyVal[C.GoString(ckey)] = cval
+		key := C.GoString((*C.char)(ckey))
+
+		cval := C.zhash_lookup(zhash, ckey)
+		val := C.GoString((*C.char)(cval))
+
+		keyVal[key] = val
 	}
 	return keyVal
 }
@@ -58,7 +62,7 @@ func bytesToZmsg(ch <-chan []byte) (*C.struct__zmsg_t, error) {
 		// gc collects it too early
 		ret := C.zmsg_addmem(zmsg, unsafe.Pointer(&frame[0]), C.size_t(len(frame)))
 		if ret != 0 {
-			C.zmsg_destroy(unsafe.Pointer(zmsg))
+			C.zmsg_destroy(&zmsg)
 			err = ErrAddingFrame
 			break
 		}

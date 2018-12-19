@@ -2,21 +2,22 @@ package gozyre
 
 /*
 #include "zyre.h"
+#include "czmq.h"
 
 int wrap_set_endpoint(zyre_t *self, const char *ep) {
-	return zyre_set_endpoint(self, ep);
+	return zyre_set_endpoint(self, "%s", ep);
 }
 
 void wrap_gossip_bind(zyre_t *self, const char *bind) {
-	zyre_gossip_bind(self, bind);
+	zyre_gossip_bind(self, "%s", bind);
 }
 
 void wrap_gossip_connect(zyre_t *self, const char *conn) {
-	zyre_gossip_connect(self, conn);
+	zyre_gossip_connect(self, "%s", conn);
 }
 
 void wrap_set_header(zyre_t *self, const char *name, const char *val) {
-	zyre_set_header(self, name, val);
+	zyre_set_header(self, name, "%s", val);
 }
 */
 import "C"
@@ -30,6 +31,16 @@ import (
 type Zyre struct {
 	czyre *C.struct__zyre_t
 }
+
+// Force ZMQ init 
+// Ensure ZMQ won't interact with GO signal handling mechanism.
+func init() {
+	C.zsys_init()
+	C.zsys_handler_set(nil)
+}
+
+// Instruct ZMQ to exit and free all its resources.
+func Exit() { C.zsys_shutdown() }
 
 // New constructs a new node for peer-to-peer discovery
 // Constructor, creates a new Zyre node. Note that until you start the
@@ -90,6 +101,16 @@ func (n *Zyre) Name() string { return C.GoString(C.zyre_name(n.czyre)) }
 
 // UUID returns our node UUID string, after successful initialization
 func (n *Zyre) UUID() string { return C.GoString(C.zyre_uuid(n.czyre)) }
+
+// Set beacon TCP ephemeral port to a well known value.
+func (n *Zyre) SetBeaconPeerPort(port uint16) {
+	C.zyre_set_beacon_peer_port(n.czyre, C.int(port))
+}
+
+// Old name of the above, deprecated.
+func (n *Zyre) SetEphemeralPort(port uint16) {
+	C.zyre_set_beacon_peer_port(n.czyre, C.int(port))
+}
 
 // SetEvasive sets the node evasiveness timeout. Default is 5 * time.Millisecond.
 func (n *Zyre) SetEvasive(timeout time.Duration) {
@@ -211,3 +232,7 @@ func (n *Zyre) Gossip(endpoint, hub string) error {
 
 // Stop signals to other nodes that this node will go away
 func (n *Zyre) Stop() { C.zyre_stop(n.czyre) }
+
+// Socket returns the socket, used by ZYRE.
+func (n *Zyre) Socket() *C.struct__zsock_t { return C.zyre_socket(n.czyre) }
+

@@ -56,4 +56,13 @@ var (
 
 	// ErrAddingFrame is returned when constructing message frames for sending
 	ErrAddingFrame = errors.New("error adding message frame")
+
+	// ErrPollTerminated is returned when POll received SIGINT
+	ErrPollInterrupted = errors.New("polling interrupted")
+
+	// ErrPollExpired is returned when POll is timed-out
+	ErrPollExpired = errors.New("polling expired")
+
+	// ErrPollUnknown is returned when unkwown error occured
+	ErrPollUnknown = errors.New("polling unknown error")
 )

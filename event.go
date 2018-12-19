@@ -97,7 +97,15 @@ func (ev *Event) Address() string { return C.GoString(C.zyre_event_peer_addr(ev.
 // XXX: Do we need to lock the headers? The underlying implementation uses a
 // cursor to iterate through the items and may introduce race conditions.
 func (ev *Event) Headers() map[string]string {
-	return zHashToMap(C.zyre_event_headers(ev.czyreEvent), false)
+	czev := ev.czyreEvent
+	if (czev == nil) {
+		return nil
+	}
+	czhdr := C.zyre_event_headers(czev)
+	if (czhdr == nil) {
+		return nil
+	}
+	return zHashToMap(czhdr, false)
 }
 
 // Header returns the header value from the header name
